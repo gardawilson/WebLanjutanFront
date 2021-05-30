@@ -2,10 +2,10 @@
     <div>
         <div>TodoList</div>
         <ul>
-            <li v-for="item in todos">{{item.deskripsi}}<button>X</button></li>
+            <li v-for="(item, index) in todos" :key="item.id">{{item.deskripsi}}<button v-on:click="hapus(item.id, index)">X</button></li>
         </ul>
         <input v-model="myText"/>
-        <button @click="tambahkan">Klik Me</button>
+        <button @click="tambah">Klik Me</button>
     </div>
 </template>
 
@@ -16,7 +16,9 @@ export default {
     data: function(){
         return{
             todos:[],
-            myText: ''
+            myText: '',
+
+
         }
     },
     created: function(){
@@ -26,11 +28,16 @@ export default {
       })
     },
     methods: {
-     tambahkan: function(){
+     tambah: function(){
          const newItem = {deskripsi: this.myText}
          axios.post('http://localhost:3000/todo', newItem)
          this.todos.push(newItem)
-     }
+     },
+        hapus: function(id, index){
+            axios.delete(`http://localhost:3000/todo/${id}`)
+            this.todos.splice(index,1);
+
+        }
     }
 }
 </script>
