@@ -2,7 +2,7 @@
     <div>
         <div>TodoList</div>
         <ul>
-            <li v-for="item in todos">{{item.desc}}</li>
+            <li v-for="item in todos">{{item.deskripsi}}<button>X</button></li>
         </ul>
         <input v-model="myText"/>
         <button @click="tambahkan">Klik Me</button>
@@ -10,6 +10,8 @@
 </template>
 
 <script>
+import axios from 'axios'
+
 export default {
     data: function(){
         return{
@@ -17,9 +19,17 @@ export default {
             myText: ''
         }
     },
+    created: function(){
+      axios.get('http://localhost:3000/todo')
+        .then(result=>{
+          this.todos = result.data
+      })
+    },
     methods: {
      tambahkan: function(){
-         this.todos.push({desc: this.myText})
+         const newItem = {deskripsi: this.myText}
+         axios.post('http://localhost:3000/todo', newItem)
+         this.todos.push(newItem)
      }
     }
 }
