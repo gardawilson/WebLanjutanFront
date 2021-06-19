@@ -4,6 +4,9 @@
         <input v-model="username" />
         <input v-model="password" />
         <button @click="tambah">Add</button>
+        <ul>
+            <li v-for="(item, index) in users" :key="item.id">{{item.username}}<button v-on:click="hapus(item.id, index)">X</button></li>
+        </ul>
     </div>
 </template>
 
@@ -19,20 +22,26 @@ export default {
         }
     },
     created: function(){
-      axios.get('http://localhost:3000/users')
+    const username = localStorage.getItem('usr')
+    const password = localStorage.getItem('pwd')
+      axios.get('http://localhost:3000/users', { headers: {username, password }})
         .then(result=>{
           this.users = result.data
       })
     },
     methods: {
      tambah: function(){
-         const newItem = {username: this.username, password: this.password}
-         axios.post('http://localhost:3000/todo', newUser)
-         this.todos.push(newUser)
+         const username = localStorage.getItem('usr')
+         const password = localStorage.getItem('pwd')
+         const newUser = {username: this.username, password: this.password}
+         axios.post('http://localhost:3000/users', newUser, { headers: {username, password }})
+         this.users.push(newUser)
      },
         hapus: function(id, index){
-            axios.delete(`http://localhost:3000/todo/${id}`)
-            this.todos.splice(index,1);
+            const username = localStorage.getItem('usr')
+            const password = localStorage.getItem('pwd')
+            axios.delete(`http://localhost:3000/users/${id}`, { headers: {username, password }})
+            this.users.splice(index,1);
 
         }
     }
