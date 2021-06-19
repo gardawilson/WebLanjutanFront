@@ -1,6 +1,6 @@
 <template>
     <div>
-        <div>TodoList</div>
+        <h1>TodoList</h1>
         <ul>
             <li v-for="(item, index) in todos" :key="item.id">{{item.deskripsi}}<button v-on:click="hapus(item.id, index)">X</button></li>
         </ul>
@@ -22,19 +22,25 @@ export default {
         }
     },
     created: function(){
-      axios.get('http://localhost:3000/todo')
+    const username = localStorage.getItem('usr')
+    const password = localStorage.getItem('pwd')
+      axios.get('http://localhost:3000/todo', { headers: {username, password }})
         .then(result=>{
           this.todos = result.data
       })
     },
     methods: {
      tambah: function(){
+        const username = localStorage.getItem('usr')
+        const password = localStorage.getItem('pwd')
          const newItem = {deskripsi: this.myText}
-         axios.post('http://localhost:3000/todo', newItem)
+         axios.post('http://localhost:3000/todo', newItem, { headers: {username, password }})
          this.todos.push(newItem)
      },
         hapus: function(id, index){
-            axios.delete(`http://localhost:3000/todo/${id}`)
+        const username = localStorage.getItem('usr')
+        const password = localStorage.getItem('pwd')
+            axios.delete(`http://localhost:3000/todo/${id}`, { headers: {username, password }})
             this.todos.splice(index,1);
 
         }
